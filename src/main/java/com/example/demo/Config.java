@@ -27,8 +27,8 @@ public class Config {
 	@Bean
 	public MockDatabase provideDatabase() {
 		List<User> users = new ArrayList<>();
-		users.add(new  User(1, "alex", 10));
-		users.add(new  User(2, "john", 11));
+		users.add(new  User(2, "alex", 10));
+		users.add(new  User(1, "john", 11));
 		users.add(new  User(3, "evan", 12));
 		users.add(new  User(5, "nick", 13));
 		users.add(new  User(1, "alex", 10));

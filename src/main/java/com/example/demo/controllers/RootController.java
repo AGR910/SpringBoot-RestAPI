@@ -1,15 +1,19 @@
 package com.example.demo.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,9 +66,32 @@ public class RootController {
 	}
 	
 	@PostMapping("/users")
-	public User createUser(@RequestBody User user) {
+	public ResponseEntity<User> createUser(@RequestBody User user) {
 		database.getUsers().add(user);
-		return user;
+		return new ResponseEntity<User>(user, HttpStatus.CREATED);
+	}
+	
+	@PutMapping("/users/{id}")
+	public ResponseEntity<User> putUserById(@PathVariable int id, @RequestBody User user) {
+		final Optional<User> streamUser = database.getUsers()
+				.stream()
+				.filter(u -> u.getId() == id)
+				.findFirst();
+		if (streamUser.isPresent()) {
+			final User userDb = streamUser.get();
+			userDb.setName(user.getName());
+			userDb.setAge(user.getAge());
+			return new ResponseEntity<User>(userDb, HttpStatus.OK);
+		}
+		// 404 Not found
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
+	}
+	@DeleteMapping("/users/{id}")
+	public ResponseEntity<Map<String, String>> deleteUserById(@PathVariable int id){
+		database.getUsers().removeIf(u -> u.getId() == id);
+		Map<String, String> body = new HashMap<>();
+		body.put("message", "your object with id = " + id + " removed");
+		return new ResponseEntity<Map<String, String>>(body, HttpStatus.OK);
 	}
 }
 

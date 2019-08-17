@@ -22,6 +22,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.db.MockDatabase;
 import com.example.demo.models.User;
+import com.example.demo.repositories.UserRepository;
+
 import java.util.stream.Stream;
 
 @RestController
@@ -37,6 +39,10 @@ public class RootController {
 	@Autowired
 	MockDatabase database;
 	
+	@Autowired
+	UserRepository repository;
+	
+	
 	@RequestMapping("/home")	
 	public String index() {
 		return "Hello, " + name1;
@@ -49,7 +55,9 @@ public class RootController {
 	
 	@GetMapping("/users")
 	public List<User> users() {
-		final List<User> users = database.getUsers();
+		//final List<User> users = database.getUsers();
+		//return users;
+		final List<User> users = repository.findAll();
 		return users;
 	}
 
@@ -67,7 +75,7 @@ public class RootController {
 	
 	@PostMapping("/users")
 	public ResponseEntity<User> createUser(@RequestBody User user) {
-		database.getUsers().add(user);
+		repository.save(user);
 		return new ResponseEntity<User>(user, HttpStatus.CREATED);
 	}
 	

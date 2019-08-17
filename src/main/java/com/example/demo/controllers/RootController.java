@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.db.MockDatabase;
@@ -46,6 +49,12 @@ public class RootController {
 	public User userById(@PathVariable int id) {
 		final List<User> users = database.getUsers();
 		return users.get(id - 1);
+	}
+	
+	@PostMapping("/users")
+	public User createUser(@RequestBody User user) {
+		database.getUsers().add(user);
+		return user;
 	}
 }
 

@@ -7,7 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import com.example.demo.db.MockDatabase;
 import com.example.demo.models.User;
 
-import static java.util.Arrays.asList;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 public class Config {
@@ -25,14 +26,13 @@ public class Config {
 	
 	@Bean
 	public MockDatabase provideDatabase() {
-		return new MockDatabase(
-			asList(
-					new  User(1, "alex", 10),
-					new  User(2, "john", 11),
-					new  User(3, "evan", 12),
-					new  User(5, "nick", 13),
-					new  User(6, "alisa", 14)
-			)
-		);
+		List<User> users = new ArrayList<>();
+		users.add(new  User(1, "alex", 10));
+		users.add(new  User(2, "john", 11));
+		users.add(new  User(3, "evan", 12));
+		users.add(new  User(5, "nick", 13));
+		users.add(new  User(1, "alex", 10));
+		users.add(new  User(6, "alisa", 14));
+		return new MockDatabase(users);
 	}
 }
